@@ -1,15 +1,10 @@
 module Heap
 (pushHeap,popHeap,heapSort) where
 
-slice::[a]->Int->[a]
-slice [] _=[]
-slice arr 0=arr
-slice (x:xs) num=slice xs (subtract 1 num)
-
 swap::[a]->Int->Int->[a]
 swap arr index1 index2
     |l==r=arr
-    |otherwise=(take l arr)++[arr !! r]++(take (r-l-1) (slice arr (l+1)))++[arr !! l]++(slice arr (r+1))
+    |otherwise=(take l arr)++[arr !! r]++(take (r-l-1) (drop (l+1) arr))++[arr !! l]++(drop (r+1) arr)
     where l=min index1 index2
           r=max index1 index2
 
@@ -28,7 +23,7 @@ popHeap::(Ord a)=>[a]->[a]
 popHeap []=[]
 popHeap [x]=[]
 popHeap arr=
-    let removedArr=last arr:slice (take ((length arr) - 1) arr) 1
+    let removedArr=last arr:drop 1 (take ((length arr) - 1) arr)
     in ordHeapR removedArr 0
 
 ordHeapR::(Ord a)=>[a]->Int->[a]
